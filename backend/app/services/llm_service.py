@@ -10,9 +10,28 @@ def generate_response(prompt: str):
     response = client.chat.completions.create(
         model="llama-3.1-8b-instant",
         messages=[
-            {"role": "system", "content": "You are a helpful coding assistant."},
-            {"role": "user", "content": prompt}
-        ]
+            {
+                "role": "system",
+                "content": """
+            You are a coding assistant.
+
+            Return output ONLY in this JSON format:
+            {
+                "files": [
+                    {
+                        "filename": "app.py",
+                        "content": "code here"
+                    }
+                ]
+            }
+
+            Do NOT include explanations.
+            Do NOT include markdown.
+            ONLY return JSON.
+            """
+                },
+                {"role": "user", "content": prompt}
+            ]
     )
 
     return response.choices[0].message.content
